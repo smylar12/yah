@@ -1,0 +1,32 @@
+body {
+  background: #f4dcf4;
+  text-align: center;
+}
+p {
+  color: black;
+}
+h1 {
+  font-weight: bold;
+}
+
+img { 
+  width: 150px; 
+  padding:40px;
+  border-style:double
+ 
+}
+img.Basic{
+  width:700px;
+  padding:2px;
+  border-style:double;
+}
+.bold{
+font-weight:bold;
+}
+h1{
+  font-family:cursive;
+  font-size:60px;
+}
+img.pesk{
+  width: 166.5px;
+}
