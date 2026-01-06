@@ -14,6 +14,7 @@
       }
     </style>
   </head>
+
   <body>
     <h1>Pile Game</h1>
 
@@ -22,5 +23,120 @@
     <button onclick="startGame('computer')">Computer</button>
 
     <div id="gameArea"></div>
+
+    <script>
+      let pile, player1, player2, currentPlayer, mode;
+      let player1Score = 0, player2Score = 0, computerScore = 0;
+
+      function startGame(selectedMode) {
+        mode = selectedMode;
+        pile = Math.floor(Math.random() * 41) + 10;
+        currentPlayer = Math.random() < 0.5 ? "player1" : "player2";
+
+        if (mode === "friends") {
+          document.getElementById("gameArea").innerHTML = `
+            <p>Enter Player 1 name:</p>
+            <input id="p1">
+            <p>Enter Player 2 name:</p>
+            <input id="p2">
+            <button onclick="beginFriends()">Start</button>
+          `;
+        } else {
+          document.getElementById("gameArea").innerHTML = `
+            <p>Enter your name:</p>
+            <input id="p1">
+            <button onclick="beginComputer()">Start</button>
+          `;
+        }
+      }
+
+      function beginFriends() {
+        player1 = document.getElementById("p1").value;
+        player2 = document.getElementById("p2").value;
+        currentPlayer = Math.random() < 0.5 ? player1 : player2;
+        updateGameScreen();
+      }
+
+      function beginComputer() {
+        player1 = document.getElementById("p1").value;
+        player2 = "Computer";
+        currentPlayer = Math.random() < 0.5 ? player1 : "Computer";
+        updateGameScreen();
+      }
+
+      function updateGameScreen() {
+        let maxRemove = pile === 2 ? 1 : Math.floor(pile / 2);
+
+        document.getElementById("gameArea").innerHTML = `
+          <h3>Current pile: ${pile}</h3>
+          <p>Current turn: ${currentPlayer}</p>
+        `;
+
+        if (pile <= 1) {
+          endRound();
+          return;
+        }
+
+        if (currentPlayer === "Computer") {
+          let remove = getSmartMove(pile, maxRemove);
+          setTimeout(() => {
+            pile -= remove;
+            currentPlayer = currentPlayer === player1 ? player2 : player1;
+            updateGameScreen();
+          }, 1000);
+        } else {
+          document.getElementById("gameArea").innerHTML += `
+            <p>Remove between 1 and ${maxRemove}:</p>
+            <input id="removeInput" type="number" min="1" max="${maxRemove}">
+            <button onclick="playerMove()">Submit</button>
+          `;
+        }
+      }
+
+      function playerMove() {
+        let remove = parseInt(document.getElementById("removeInput").value);
+        let maxRemove = pile === 2 ? 1 : Math.floor(pile / 2);
+
+        if (remove < 1 || remove > maxRemove) {
+          alert("Invalid move.");
+          return;
+        }
+
+        pile -= remove;
+        currentPlayer = currentPlayer === player1 ? player2 : player1;
+        updateGameScreen();
+      }
+
+      function endRound() {
+        let winner = currentPlayer === player1 ? player2 : player1;
+
+        if (winner === player1) {
+          player1Score++;
+        } else if (winner === player2 && mode === "friends") {
+          player2Score++;
+        } else {
+          computerScore++;
+        }
+
+        document.getElementById("gameArea").innerHTML = `
+          <h2>${winner} wins!</h2>
+          <p>${player1}: ${player1Score}</p>
+          <p>${player2}: ${mode === "friends" ? player2Score : computerScore}</p>
+          <button onclick="location.reload()">Play Again</button>
+        `;
+      }
+
+      function getSmartMove(pile, maxRemove) {
+        for (let k = 5; k >= 1; k--) {
+          let target = (1 << k) - 1;
+          if (target < pile) {
+            let remove = pile - target;
+            if (remove >= 1 && remove <= maxRemove) return remove;
+          }
+        }
+        return 1;
+      }
+    </script>
   </body>
 </html>
+
