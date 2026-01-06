@@ -68,6 +68,7 @@
         let maxRemove = pile === 2 ? 1 : Math.floor(pile / 2);
 
         document.getElementById("gameArea").innerHTML = `
+          <button onclick="window.location.href='index.html'">Go Back</button>
           <h3>Current pile: ${pile}</h3>
           <p>Current turn: ${currentPlayer}</p>
         `;
@@ -119,6 +120,7 @@
         }
 
         document.getElementById("gameArea").innerHTML = `
+          <button onclick="window.location.href='index.html'">Go Back</button>
           <h2>${winner} wins!</h2>
           <p>${player1}: ${player1Score}</p>
           <p>${player2}: ${mode === "friends" ? player2Score : computerScore}</p>
@@ -133,7 +135,7 @@
             let remove = pile - target;
             if (remove >= 1 && remove <= maxRemove) return remove;
           }
-         }
+        }
         return 1;
       }
     </script>
